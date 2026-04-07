@@ -17,9 +17,11 @@ import seaborn as sns
 def load_data():
     transactions = pd.read_csv('transactions.csv', parse_dates=['date'])
     categories   = pd.read_csv('categories.csv')
-
+    merchants    = pd.read_csv('merchants.csv')
+    
     #Join category names — same left join pattern from Week 8.
     df = pd.merge(transactions, categories, on='category_id', how='left')
+
     return df
 
 df = load_data()
@@ -83,8 +85,26 @@ summary = (
     .reset_index()
 )
 
+merchant_summary = (
+    filtered
+    .groupby('merchant_id')['amount']
+    .sum()
+    .sort_values(ascending=False)
+    .reset_index()
+)
+
 st.header('Spending by Category')
 st.dataframe(summary)
+
+st.header('Spending by Merchant')
+fig, ax = plt.subplots(figsize=(8, max(4, len(merchant_summary) * 0.3)))
+sns.barplot(data=merchant_summary, x='amount', y='merchant_name', ax=ax)
+ax.set_title('Spending by Merchant')
+ax.set_xlabel('Total ($)')
+ax.set_ylabel('')
+plt.tight_layout()
+st.pyplot(fig)
+plt.close(fig)
 
 
 # ── Stacked bar chart: monthly spending by category ───────────────────────────
