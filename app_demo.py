@@ -21,7 +21,8 @@ def load_data():
     
     #Join category names — same left join pattern from Week 8.
     df = pd.merge(transactions, categories, on='category_id', how='left')
-
+    df = pd.merge(df, merchants, on='merchant_id', how='left')
+    
     return df
 
 df = load_data()
@@ -87,7 +88,7 @@ summary = (
 
 merchant_summary = (
     filtered
-    .groupby('merchant_id')['amount']
+    .groupby('merchant_name')['amount']
     .sum()
     .sort_values(ascending=False)
     .reset_index()
