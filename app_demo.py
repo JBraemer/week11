@@ -65,7 +65,7 @@ if not selected_categories:
 
 # ── Filter by selected categories ────────────────────────────────────────────
 filtered = expenses[
-    (expenses['category_name'].isin(selected_categories))
+    (expenses['category_name'].isin(selected_categories)) &
     (expenses['date'].dt.year == selected_year)
 ]
 
